@@ -2,10 +2,19 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.5'
 	id 'io.spring.dependency-management' version '1.1.3'
+	id 'com.diffplug.spotless' version "6.22.0"
 }
 
 group = 'it.garambo'
 version = '0.0.1-SNAPSHOT'
+
+spotless {
+	java {
+		importOrder()
+		removeUnusedImports()
+		googleJavaFormat()
+	}
+}
 
 java {
 	sourceCompatibility = '17'
@@ -24,6 +33,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.jsoup:jsoup:1.16.2'
+	implementation 'commons-validator:commons-validator:1.7'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
