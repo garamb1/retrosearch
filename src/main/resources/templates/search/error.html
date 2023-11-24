@@ -1,0 +1,11 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RetroSearch Error</title>
+</head>
+<body>
+<h1 th:text="${error}"></h1>
+<p>For query: <b th:text="${query}"></b></p>
+<img th:src="@{img/error.gif}">
+<a href="/">Go Back</a>
+</body>
+</html>

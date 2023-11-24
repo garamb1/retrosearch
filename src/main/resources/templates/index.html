@@ -1,12 +1,16 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>RetroSearch</title>
 </head>
 <body>
 <h1>RetroSearch</h1>
+<p><b>Search</b> and <b>Browse</b> the WWW like it's 1997</em></p>
 <form action="/search" method="get">
     Search Query:<input type="text" name="query">
     <input type="submit" value="Go!">
 </form>
+<p>
+    <em>Results from <a href="https://duckduckgo.com">DuckDuckGo</a></em>
+</p>
 </body>
 </html>
