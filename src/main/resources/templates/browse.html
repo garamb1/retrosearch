@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RetroSearch Browse</title>
+</head>
+<body>
+<h1>RetroSearch</h1>
+<form action="/search" method="get">
+    Search Query:<input type="text" name="query">
+    <input type="submit" value="Go!">
+</form>
+
+<h2>Showing content from <em th:text="${originalUrl}"></em> below:</h2>
+<h3 th:text="${parsedHtmlPage.title}"></h3>
+<p th:text="${parsedHtmlPage.content}"></p>
+
+</body>
+</html>

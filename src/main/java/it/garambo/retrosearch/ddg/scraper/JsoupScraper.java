@@ -16,6 +16,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -23,7 +24,7 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class JsoupScraper implements Scraper {
 
-  private final UrlValidator urlValidator = new UrlValidator();
+  @Autowired UrlValidator urlValidator;
 
   @Override
   public List<ResultEntry> scrapeResults(String html) {
