@@ -37,7 +37,16 @@ public class JsoupScraperTest {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
     List<ResultEntry> results = scraper.scrapeResults(content);
     assertNotNull(results);
-    assertEquals(26, results.size());
+    assertEquals(4, results.size());
+
+    ResultEntry firstEntry = results.get(0);
+    assertEquals("Description 1", firstEntry.description());
+    assertEquals("Title 1", firstEntry.title());
+    assertEquals(URI.create("http://test1.com"), firstEntry.uri());
+
+    // entry with regular url
+    ResultEntry lastEntry = results.get(3);
+    assertEquals(URI.create("http://test4.com"), lastEntry.uri());
   }
 
   @Test
@@ -46,7 +55,7 @@ public class JsoupScraperTest {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
     List<ResultEntry> results = scraper.scrapeResults(content);
     assertNotNull(results);
-    assertEquals(24, results.size());
+    assertEquals(1, results.size());
   }
 
   @Test
@@ -56,7 +65,7 @@ public class JsoupScraperTest {
     Document document = scraper.getDocument(content);
 
     assertNotNull(document);
-    Assertions.assertEquals("macintosh at DuckDuckGo", document.title());
+    Assertions.assertEquals("Test Page", document.title());
   }
 
   @Test
