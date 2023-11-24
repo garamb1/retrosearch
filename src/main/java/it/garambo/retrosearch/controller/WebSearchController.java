@@ -16,11 +16,18 @@ public class WebSearchController {
 
   @Autowired private DDGClient ddgClient;
 
+  @GetMapping
+  public String index(Model model) {
+    int randomLogoId = (int) (Math.random() * 3) + 1;
+    model.addAttribute("logoId", randomLogoId);
+    return "index";
+  }
+
   @GetMapping("/search")
   public String search(
       @RequestParam() Optional<String> query, @RequestParam Optional<String> locale, Model model) {
     if (query.isEmpty() || query.get().isEmpty()) {
-      return "index";
+      return "redirect:/";
     }
 
     try {
