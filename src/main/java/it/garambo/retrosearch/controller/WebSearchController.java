@@ -36,13 +36,14 @@ public class WebSearchController {
               ? ddgClient.search(query.get())
               : ddgClient.search(query.get(), locale.get());
       model.addAttribute(searchResults);
-      return "search/results";
+      return "search-results";
     } catch (Exception e) {
       log.error(
           "Error getting search result, for parameter query: {}, locale: {}", query, locale, e);
       model.addAttribute("error", "Could not get search results. Sorry :(");
-      model.addAttribute("query", query.get());
-      return "search/error";
+      model.addAttribute(
+          "details", "Your search query '" + query.get() + "' could not be processed");
+      return "error-details";
     }
   }
 }
