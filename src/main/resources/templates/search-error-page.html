@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RetroSearch</title>
+</head>
+<body>
+<h1>Error - RetroSearch</h1>
+<form action="/search" method="get">
+    Search Query:<input type="text" name="query" th:value="${searchResults.query}">
+    <input type="submit" value="Go!">
+</form>
+
+<h2>An error occurred</h2>
+<p th:text="error.message"></p>
+
+</body>
+</html>

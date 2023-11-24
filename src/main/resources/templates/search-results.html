@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RetroSearch</title>
+</head>
+<body>
+<h1>RetroSearch</h1>
+<form action="/search" method="get">
+    Search Query:<input type="text" name="query">
+    <input type="submit" value="Go!">
+</form>
+<table>
+    <tr th:each="element: ${searchResults.resultEntries}">
+        <a th:href="${element.uri}">
+            <h3 th:text="${element.title}"></h3>
+            <p th:text="${element.uri}"></p>
+        </a>
+        <p th:text="${element.description}"></p>
+    </tr>
+</table>
+
+</body>
+</html>
