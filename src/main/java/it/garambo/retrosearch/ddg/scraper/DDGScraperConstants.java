@@ -1,4 +1,4 @@
-package it.garambo.retrosearch.ddg.util;
+package it.garambo.retrosearch.ddg.scraper;
 
 import lombok.Getter;
 
