@@ -3,9 +3,12 @@
     <title>RetroSearch Error</title>
 </head>
 <body>
-<h1 th:text="${error}"></h1>
+<h1>Error - RetroSearch</h1>
+<h2 th:text="${error}"></h2>
 <p>Details: <b th:text="${details}"></b></p>
 <img th:src="@{img/error.gif}">
 <a href="/">Go Back</a>
+
+<br th:insert="fragments/footer.html">
 </body>
 </html>
