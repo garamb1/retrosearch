@@ -8,7 +8,7 @@ Search and Browse the WWW like it's 1997.
 ### Check it out at: [retrosearch.org](http://retrosearch.org)
 ### Self-host with [Docker Image](https://hub.docker.com/repository/docker/garambo/retrosearch)
 
-![RetroSearch.org on Netscape 2.0 and IE 5](https://github.com/garamb1/retrosearch/assets/3776646/c56ab7e3-a16f-4b7a-86ca-2aa13a23fbb2)
+![RetroSearch.org on Netscape 2.0 and IE 5](https://github.com/garamb1/retrosearch/assets/3776646/c72e5fa5-dee8-4ea5-b2f4-211baafae626)
 
 
 ## How does it work?
