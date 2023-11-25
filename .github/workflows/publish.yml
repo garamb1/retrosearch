@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Read VERSION file
         id: getVersion
-        run: echo "::set-output name=version::$(cat VERSION)"
+        run: echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
       - name: Print Release Version
         run: echo ${{ steps.getVersion.outputs.version }}
       - uses: actions/checkout@v3
