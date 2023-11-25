@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import it.garambo.retrosearch.ddg.model.ResultEntry;
-import it.garambo.retrosearch.ddg.util.DDGScraperConstants;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -27,15 +26,15 @@ import org.springframework.core.io.Resource;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class JsoupScraperTest {
+public class DDGDDGScraperImplTest {
 
-  @Autowired Scraper scraper;
+  @Autowired DDGScraper DDGScraper;
 
   @Test
   void testScrapeResults(@Value("classpath:test_result.html") Resource testResultHtml)
       throws IOException {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
-    List<ResultEntry> results = scraper.scrapeResults(content);
+    List<ResultEntry> results = DDGScraper.scrapeResults(content);
     assertNotNull(results);
     assertEquals(4, results.size());
 
@@ -53,7 +52,7 @@ public class JsoupScraperTest {
   void testScrapeResultsWithInvalidElement(
       @Value("classpath:test_result_invalid.html") Resource testResultHtml) throws IOException {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
-    List<ResultEntry> results = scraper.scrapeResults(content);
+    List<ResultEntry> results = DDGScraper.scrapeResults(content);
     assertNotNull(results);
     assertEquals(1, results.size());
   }
@@ -62,7 +61,7 @@ public class JsoupScraperTest {
   void testGetDocument(@Value("classpath:test_result.html") Resource testResultHtml)
       throws IOException {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
-    Document document = scraper.getDocument(content);
+    Document document = DDGScraper.getDocument(content);
 
     assertNotNull(document);
     Assertions.assertEquals("Test Page", document.title());
@@ -76,7 +75,7 @@ public class JsoupScraperTest {
     when(resultElement.select(eq(DDGScraperConstants.RESULT_TITLE_CLASS_SELECTOR)))
         .thenReturn(queryResults);
 
-    String title = scraper.getEntryTitle(resultElement);
+    String title = DDGScraper.getEntryTitle(resultElement);
     assertEquals("Title", title);
   }
 
@@ -84,7 +83,7 @@ public class JsoupScraperTest {
   void testGetEntryTitleEmpty(@Mock Element resultElement) {
     when(resultElement.select(eq(DDGScraperConstants.RESULT_TITLE_CLASS_SELECTOR)))
         .thenReturn(new Elements());
-    String title = scraper.getEntryTitle(resultElement);
+    String title = DDGScraper.getEntryTitle(resultElement);
     assertNull(title);
   }
 
@@ -97,7 +96,7 @@ public class JsoupScraperTest {
     when(resultElement.select(eq(DDGScraperConstants.RESULT_TITLE_CLASS_SELECTOR)))
         .thenReturn(queryResults);
 
-    URI title = scraper.getEntryUri(resultElement);
+    URI title = DDGScraper.getEntryUri(resultElement);
     assertEquals(URI.create("http://github.com"), title);
   }
 
@@ -105,7 +104,7 @@ public class JsoupScraperTest {
   void testGetEntryUriEmpty(@Mock Element resultElement) throws MalformedURLException {
     when(resultElement.select(eq(DDGScraperConstants.RESULT_TITLE_CLASS_SELECTOR)))
         .thenReturn(new Elements());
-    URI title = scraper.getEntryUri(resultElement);
+    URI title = DDGScraper.getEntryUri(resultElement);
     assertNull(title);
   }
 
@@ -121,7 +120,7 @@ public class JsoupScraperTest {
         assertThrows(
             MalformedURLException.class,
             () -> {
-              scraper.getEntryUri(resultElement);
+              DDGScraper.getEntryUri(resultElement);
             });
     assertEquals("Invalid url for entry, url: not-a-uri", expectedException.getMessage());
   }
@@ -134,7 +133,7 @@ public class JsoupScraperTest {
     when(resultElement.select(eq(DDGScraperConstants.RESULT_DESCRIPTION_CLASS_SELECTOR)))
         .thenReturn(queryResults);
 
-    String description = scraper.getEntryDescription(resultElement);
+    String description = DDGScraper.getEntryDescription(resultElement);
     assertEquals("Description", description);
   }
 
@@ -142,7 +141,7 @@ public class JsoupScraperTest {
   void testGetEntryDescriptionEmpty(@Mock Element resultElement) {
     when(resultElement.select(eq(DDGScraperConstants.RESULT_DESCRIPTION_CLASS_SELECTOR)))
         .thenReturn(new Elements());
-    String description = scraper.getEntryDescription(resultElement);
+    String description = DDGScraper.getEntryDescription(resultElement);
     assertNull(description);
   }
 }

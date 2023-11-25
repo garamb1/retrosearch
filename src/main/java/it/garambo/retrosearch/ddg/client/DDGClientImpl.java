@@ -2,7 +2,7 @@ package it.garambo.retrosearch.ddg.client;
 
 import it.garambo.retrosearch.ddg.model.ResultEntry;
 import it.garambo.retrosearch.ddg.model.SearchResults;
-import it.garambo.retrosearch.ddg.scraper.JsoupScraper;
+import it.garambo.retrosearch.ddg.scraper.DDGScraper;
 import it.garambo.retrosearch.ddg.util.DDGConstants;
 import it.garambo.retrosearch.http.HttpService;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class DDGClientImpl implements DDGClient {
 
   @Autowired private HttpService httpService;
 
-  @Autowired private JsoupScraper jsoupScraper;
+  @Autowired private DDGScraper ddgScraper;
 
   @Override
   public SearchResults search(String query) throws IOException, URISyntaxException {
@@ -33,7 +33,7 @@ public class DDGClientImpl implements DDGClient {
             DDGConstants.REGION_PARAM_NAME, locale);
 
     String resultPage = httpService.get(URI.create(DDGConstants.BASE_URL), searchParams);
-    List<ResultEntry> resultEntryList = jsoupScraper.scrapeResults(resultPage);
+    List<ResultEntry> resultEntryList = ddgScraper.scrapeResults(resultPage);
 
     return SearchResults.builder()
         .query(query)

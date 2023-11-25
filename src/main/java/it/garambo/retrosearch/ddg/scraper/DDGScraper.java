@@ -7,7 +7,7 @@ import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public interface Scraper {
+public interface DDGScraper {
   List<ResultEntry> scrapeResults(String html);
 
   Document getDocument(String html);
