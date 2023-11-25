@@ -11,7 +11,7 @@
 
 <h2>Showing content from <em th:text="${originalUrl}"></em> below:</h2>
 <h3 th:text="${parsedHtmlPage.title}"></h3>
-<p th:text="${parsedHtmlPage.content}"></p>
+<p th:utext="${parsedHtmlPage.htmlContent}"></p>
 
 </body>
 </html>

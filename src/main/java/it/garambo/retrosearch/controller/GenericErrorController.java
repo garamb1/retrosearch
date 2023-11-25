@@ -12,5 +12,4 @@ public class GenericErrorController implements ErrorController {
   public String genericError(Model model) {
     return "error";
   }
-
 }

@@ -1,6 +1,6 @@
 package it.garambo.retrosearch.ddg.scraper;
 
-import static it.garambo.retrosearch.ddg.util.DDGScraperConstants.*;
+import static it.garambo.retrosearch.ddg.scraper.DDGScraperConstants.*;
 
 import it.garambo.retrosearch.ddg.model.ResultEntry;
 import java.net.MalformedURLException;
@@ -22,7 +22,7 @@ import org.springframework.util.ObjectUtils;
 
 @Slf4j
 @Service
-public class JsoupScraper implements Scraper {
+public class DDGScraperImpl implements DDGScraper {
 
   @Autowired UrlValidator urlValidator;
 
