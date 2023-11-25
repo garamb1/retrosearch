@@ -3,11 +3,8 @@
     <title>RetroSearch</title>
 </head>
 <body>
-<h1>RetroSearch</h1>
-<form action="/search" method="get">
-    Search Query:<input type="text" th:value="${searchResults.query}" name="query">
-    <input type="submit" value="Go!">
-</form>
+<br th:insert="fragments/header.html">
+
 <h2>Search Results below:</h2>
 <ul>
     <li th:each="element: ${searchResults.resultEntries}">
@@ -18,7 +15,7 @@
     <p th:text="${element.description}"></p>
 </li>
 </ul>
+
+<br th:insert="fragments/footer.html">
 </body>
 </html>
-
-http://localhost:8080/@%7Bbrowse?url={uri}(id=${element.uri})}

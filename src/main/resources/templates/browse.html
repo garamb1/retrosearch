@@ -3,15 +3,12 @@
     <title>RetroSearch Browse</title>
 </head>
 <body>
-<h1>RetroSearch</h1>
-<form action="/search" method="get">
-    Search Query:<input type="text" name="query">
-    <input type="submit" value="Go!">
-</form>
+<br th:insert="fragments/header.html">
 
 <h2>Showing content from <em th:text="${originalUrl}"></em> below:</h2>
 <h3 th:text="${parsedHtmlPage.title}"></h3>
 <p th:utext="${parsedHtmlPage.htmlContent}"></p>
 
+<br th:insert="fragments/footer.html">
 </body>
 </html>

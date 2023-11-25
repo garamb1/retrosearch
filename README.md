@@ -9,8 +9,7 @@ Search and Browse the WWW like it's 1997.
 ## How does it work?
 
 RetroSearch is a Spring Web Application that presents very simple HTML pages which can be interpreted by old browsers.
-It currently provides the ability to search the Web using DuckDuckGo with a custom scraper that loads the first page of results and view the page in plain text.
-
+It provides the ability to search the Web using DuckDuckGo with a custom scraper that loads the first page of results and allows you to browse pages in plain text.
 You can deploy it on your local network and access it from your old computer!
 
 ### WIP
