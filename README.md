@@ -3,8 +3,10 @@
 
 Search and Browse the WWW like it's 1997.
 
-![RetroSearch on Netscape 2.0 and IE 5](https://github.com/garamb1/retrosearch/assets/3776646/aa7356ce-aa64-48fc-84c2-c5a34fd99474)
+[![Published on DockerHub](https://github.com/garambo/retrosearch/actions/workflows/publish.yml/badge.svg)
+](https://hub.docker.com/repository/docker/garambo/retrosearch)
 
+![RetroSearch on Netscape 2.0 and IE 5](https://github.com/garamb1/retrosearch/assets/3776646/aa7356ce-aa64-48fc-84c2-c5a34fd99474)
 
 ## How does it work?
 
