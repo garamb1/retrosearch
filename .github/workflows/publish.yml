@@ -34,7 +34,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
-          arguments: -P${{ version }} build
+          arguments: -P${{ env.version }} build
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
@@ -51,4 +51,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ version }}
+          tags: ${{ env.version }}
