@@ -4,14 +4,25 @@
     <title>About RetroSearch</title>
 </head>
 <body>
-    <h1>About RetroSearch</h1>
+    <h1>About RetroSearch:</h1>
     <p>RetroSearch is a Spring Web Application that presents very simple HTML pages which can be interpreted by old browsers.</p>
     <p>It provides the ability to search the Web using DuckDuckGo with a custom scraper that loads the first page of results and allows you to browse pages in plain text.</p>
+    <p>In short, RetroSearch parses long and complex web pages and return them to your old computer's browser with three main features:</p>
+    <ul>
+        <li>responses in simple markup, with tags from the <a href="https://www.w3.org/MarkUp/html-spec/html-spec_toc.html">HTML 2.0 standard</a> or earlier</li>
+        <li>ISO-8859-1 encoding of pages</li>
+        <li>no images (except for not one, not two, but three horrible WordArt-style logos!)</li>
+    </ul>
+
+    <h2>Notes</h2>
+    <p>I am aiming to support HTML 2.0 - As of now, the homepage and the search page (and this one of course) are 100% compliant.</p>
+    <p>At the moment, when browsing the web with the browse feature, there might be some unsupported tags being returned. </p>
+    <p>Most retro browsers (such as Netscape 2+) shouldn't have breaking issues with them.</p>
 
     <h2>Open source software</h2>
 
     <h3>RetroSearch</h3>
-    <a href="https://www.gnu.org/licenses/gpl-3.0.txt"><p>GPL-V3 License</p></a>
+    <a href="https://www.gnu.org/licenses/gpl-3.0.txt">GPL-V3 License</a>
     <a href="https://github.com/garamb1/retrosearch">GitHub Repository</a>
 
     <h3>Spring Framework</h3>
@@ -25,6 +36,14 @@
     <h3>Apache Commons</h3>
     <a href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0 License</a>
     <a href="https://commons.apache.org/proper/commons-validator/">Website</a>
+
+    <h3>Apache HTTP Client</h3>
+    <a href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0 License</a>
+    <a href="https://hc.apache.org/httpcomponents-client-5.2.x/">Website</a>
+
+    <h3>Thymeleaf</h3>
+    <a href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0 License</a>
+    <a href="https://www.thymeleaf.org/">Website</a>
 
     <h3>Jsoup</h3>
     <a href="https://opensource.org/license/mit/">MIT License</a>
