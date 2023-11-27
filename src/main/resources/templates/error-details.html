@@ -1,3 +1,4 @@
+<th:block th:insert="fragments/doctype.html"]></th:block>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>RetroSearch Error</title>
@@ -7,8 +8,9 @@
 <h2 th:text="${error}"></h2>
 <p>Details: <b th:text="${details}"></b></p>
 <img th:src="@{img/error.gif}">
+<br>
 <a href="/">Go Back</a>
-
-<br th:insert="fragments/footer.html">
+<br>
+<th:block th:insert="fragments/footer.html"]></th:block>
 </body>
 </html>

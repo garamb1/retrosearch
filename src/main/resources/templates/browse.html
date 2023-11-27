@@ -1,14 +1,15 @@
+<th:block th:insert="fragments/doctype.html"]></th:block>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>RetroSearch Browse</title>
 </head>
 <body>
-<br th:insert="fragments/header.html">
+<th:block th:insert="fragments/header.html"]></th:block>
 
 <h2>Showing content from <em th:text="${originalUrl}"></em> below:</h2>
 <h3 th:text="${parsedHtmlPage.title}"></h3>
-<p th:utext="${parsedHtmlPage.htmlContent}"></p>
+<th:block th:utext="${parsedHtmlPage.htmlContent}"></th:block>
 
-<br th:insert="fragments/footer.html">
+<th:block th:insert="fragments/footer.html"]></th:block>
 </body>
 </html>
