@@ -26,6 +26,11 @@ public class BeanConfig {
   }
 
   @Bean
+  public String defaultDocType() {
+    return "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 2.0//EN\">";
+  }
+
+  @Bean
   public ThymeleafViewResolver thymeleafViewResolver(
       @Autowired SpringTemplateEngine templateEngine) {
     ThymeleafViewResolver resolver = new ThymeleafViewResolver();

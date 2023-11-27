@@ -1,6 +1,7 @@
 <a href="/"><img th:src="@{__${@logoPath}__}" alt="A RetroSearch Logo"></a>
-<p><b>Search</b> and <b>Browse</b> the WWW like it's 1997</em></p>
+<p><b>Search</b> and <b>Browse</b> the WWW <em>like it's 1997</em> </p>
 <form action="/search" method="get">
     Search Query:<input type="text" th:value="${searchResults?.query}" name="query">
     <input type="submit" value="Go!">
 </form>
+<br>
