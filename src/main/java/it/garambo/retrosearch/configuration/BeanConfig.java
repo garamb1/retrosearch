@@ -1,8 +1,8 @@
 package it.garambo.retrosearch.configuration;
 
-import java.nio.charset.StandardCharsets;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -26,16 +26,19 @@ public class BeanConfig {
   }
 
   @Bean
-  public String defaultDocType() {
-    return "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 2.0//EN\">";
+  public ApplicationSettings applicationSettings(
+      @Value("${retrosearch.html.version:2.0}") String htmlVersionValue,
+      @Value("${retrosearch.encoding:UTF-8}") String encodingValue) {
+    return new ApplicationSettings(HTMLVersion.getByVersionName(htmlVersionValue), encodingValue);
   }
 
   @Bean
   public ThymeleafViewResolver thymeleafViewResolver(
-      @Autowired SpringTemplateEngine templateEngine) {
+      @Autowired SpringTemplateEngine templateEngine,
+      @Autowired ApplicationSettings applicationSettings) {
     ThymeleafViewResolver resolver = new ThymeleafViewResolver();
     resolver.setTemplateEngine(templateEngine);
-    resolver.setCharacterEncoding(StandardCharsets.ISO_8859_1.displayName());
+    resolver.setCharacterEncoding(applicationSettings.getEncoding());
     return resolver;
   }
 }
