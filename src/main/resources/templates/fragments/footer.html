@@ -1,3 +1,12 @@
-<br>
-<a href="/about"><b>RetroSearch</b></a> is an open source project built by <a href="/browse?url=https://garambo.it/about"> Vincenzo Garambone</a>
-<p>Search results from <a href="https://duckduckgo.com">DuckDuckGo</a></p>
+<p>
+<a href="/about"><b>RetroSearch</b></a> is an open source project built by <a href="/browse?url=https://garambo.it/about">@garambo</a>
+| Search results from <a href="https://duckduckgo.com">DuckDuckGo</a>
+</p>
+<code>
+    HTML:
+    <th:block th:utext="${__${@applicationSettings.htmlVersion.id}__}"></th:block>
+    | Encoding:
+    <th:block th:utext="@{__${@applicationSettings.encoding}__}"></th:block>
+    | Version:
+    <th:block th:utext="@{__${@buildProperties.version}__}"></th:block>
+</code>
