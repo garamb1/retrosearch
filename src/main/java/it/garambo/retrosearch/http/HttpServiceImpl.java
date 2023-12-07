@@ -7,25 +7,39 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 @Service
 public class HttpServiceImpl implements HttpService {
-  ResponseHandler<String> responseHandler = new InternalHttpClientResponseHandler();
+
+  private final HttpClientFactory clientFactory;
+
+  private final ResponseHandler<String> responseHandler;
+
+  private final Header[] defaultClientHeaders = {
+    new BasicHeader("charset", "UTF-8"),
+    new BasicHeader(
+        "User-Agent",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+  };
+
+  public HttpServiceImpl(
+      @Autowired HttpClientFactory clientFactory,
+      @Autowired ResponseHandler<String> responseHandler) {
+    this.clientFactory = clientFactory;
+    this.responseHandler = responseHandler;
+  }
 
   @Override
   public String get(URI uri) throws IOException, URISyntaxException {
@@ -36,23 +50,24 @@ public class HttpServiceImpl implements HttpService {
   public String get(URI uri, Map<String, String> params) throws IOException, URISyntaxException {
     URIBuilder newUri = new URIBuilder(uri).setParameters(mapToNameValuePair(params));
     final HttpGet get = new HttpGet(newUri.build());
-    get.setHeader("charset", "UTF-8");
-    return createHttpClient().execute(get, responseHandler);
+
+    get.setHeaders(defaultClientHeaders);
+    return clientFactory.createHttpClient().execute(get, responseHandler);
   }
 
   @Override
   public String post(URI uri, String body) throws IOException {
     final HttpPost post = new HttpPost(uri);
     post.setEntity(new StringEntity(body));
-    post.setHeader("charset", "UTF-8");
-    return createHttpClient().execute(post, responseHandler);
+    post.setHeaders(defaultClientHeaders);
+    return clientFactory.createHttpClient().execute(post, responseHandler);
   }
 
   @Override
   public String post(URI uri, Map<String, String> formData) throws IOException, URISyntaxException {
     URIBuilder newUri = new URIBuilder(uri).setParameters(mapToNameValuePair(formData));
     final HttpPost post = new HttpPost(newUri.build());
-    return createHttpClient().execute(post, responseHandler);
+    return clientFactory.createHttpClient().execute(post, responseHandler);
   }
 
   private List<NameValuePair> mapToNameValuePair(Map<String, String> map) {
@@ -62,26 +77,5 @@ public class HttpServiceImpl implements HttpService {
     return map.keySet().stream()
         .map(key -> new BasicNameValuePair(key, map.get(key)))
         .collect(Collectors.toList());
-  }
-
-  private HttpClient createHttpClient() {
-    return HttpClientBuilder.create().build();
-  }
-
-  private static class InternalHttpClientResponseHandler implements ResponseHandler<String> {
-    @Override
-    public String handleResponse(HttpResponse response)
-        throws ClientProtocolException, IOException {
-      int statusCode = response.getStatusLine().getStatusCode();
-      if (statusCode >= 200 && statusCode < 400) {
-        HttpEntity entity = response.getEntity();
-        return EntityUtils.toString(entity);
-      } else {
-        throw new IOException(
-            String.format(
-                "Response %s, got status code %s",
-                response.getStatusLine().getReasonPhrase(), statusCode));
-      }
-    }
   }
 }

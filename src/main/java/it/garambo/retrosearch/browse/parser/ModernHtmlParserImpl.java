@@ -41,6 +41,7 @@ public class ModernHtmlParserImpl implements ModernHtmlParser {
         .build();
   }
 
+  @Override
   public String cleanPage(String articleContent, boolean replacePageLinks) {
 
     String safePage =
