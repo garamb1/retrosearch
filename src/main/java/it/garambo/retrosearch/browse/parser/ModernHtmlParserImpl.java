@@ -6,9 +6,7 @@ import it.garambo.retrosearch.http.HttpService;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import net.dankito.readability4j.Article;
 import net.dankito.readability4j.Readability4J;
@@ -34,11 +32,18 @@ public class ModernHtmlParserImpl implements ModernHtmlParser {
     Document document = Jsoup.parse(httpService.get(uri));
     Article article = parseArticle(uri, document);
     String title = article.getTitle();
+    List<String> navigation = getPageNavigation(document.body());
 
     return ParsedHtmlPage.builder()
         .title(title)
+        .navigation(navigation)
         .htmlContent(cleanPage(article.getContent(), true))
         .build();
+  }
+
+  @Override
+  public Article parseArticle(URI uri, Document document) {
+    return new Readability4J(uri.toASCIIString(), document).parse();
   }
 
   @Override
@@ -57,10 +62,10 @@ public class ModernHtmlParserImpl implements ModernHtmlParser {
       return safePageWithSupportedTags;
     }
 
-    return replacePageLinks(safePageWithSupportedTags).html();
+    return replaceLinks(safePageWithSupportedTags).html();
   }
 
-  public Elements replacePageLinks(String articleContent) {
+  protected Elements replaceLinks(String articleContent) {
     Element document = Jsoup.parse(articleContent);
     Elements links = Objects.requireNonNull(document).select("a");
     for (Element element : links) {
@@ -69,18 +74,23 @@ public class ModernHtmlParserImpl implements ModernHtmlParser {
     return document.select("body");
   }
 
-  public Elements removeUnsupportedTags(String articleContent) {
+  protected Elements removeUnsupportedTags(String articleContent) {
     Element document = Jsoup.parse(articleContent);
     Set<String> unsupported = tagReplacements.keySet();
     for (String unsupportedTag : unsupported) {
-      Elements unsupportedElement =
-          document.select(unsupportedTag).tagName(tagReplacements.get(unsupportedTag));
+      document.select(unsupportedTag).tagName(tagReplacements.get(unsupportedTag));
     }
     return document.select("body");
   }
 
-  @Override
-  public Article parseArticle(URI uri, Document document) {
-    return new Readability4J(uri.toASCIIString(), document).parse();
+  protected List<String> getPageNavigation(Element documentBody) {
+    Elements nav = documentBody.select("nav > a");
+    List<String> navigationLinks = new ArrayList<>();
+    for (Element link : nav) {
+      if (link.hasText()) {
+        navigationLinks.add(cleanPage(link.outerHtml(), true));
+      }
+    }
+    return navigationLinks;
   }
 }
