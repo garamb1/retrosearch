@@ -26,12 +26,12 @@ import org.springframework.core.io.Resource;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class DDGDDGScraperImplTest {
+class DDGDDGScraperImplTest {
 
   @Autowired DDGScraper DDGScraper;
 
   @Test
-  void testScrapeResults(@Value("classpath:test_result.html") Resource testResultHtml)
+  void testScrapeResults(@Value("classpath:ddg/scraper/test_result.html") Resource testResultHtml)
       throws IOException {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
     List<ResultEntry> results = DDGScraper.scrapeResults(content);
@@ -50,7 +50,8 @@ public class DDGDDGScraperImplTest {
 
   @Test
   void testScrapeResultsWithInvalidElement(
-      @Value("classpath:test_result_invalid.html") Resource testResultHtml) throws IOException {
+      @Value("classpath:ddg/scraper/test_result_invalid.html") Resource testResultHtml)
+      throws IOException {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
     List<ResultEntry> results = DDGScraper.scrapeResults(content);
     assertNotNull(results);
@@ -58,7 +59,7 @@ public class DDGDDGScraperImplTest {
   }
 
   @Test
-  void testGetDocument(@Value("classpath:test_result.html") Resource testResultHtml)
+  void testGetDocument(@Value("classpath:ddg/scraper/test_result.html") Resource testResultHtml)
       throws IOException {
     String content = testResultHtml.getContentAsString(Charset.defaultCharset());
     Document document = DDGScraper.getDocument(content);
