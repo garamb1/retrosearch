@@ -7,6 +7,15 @@
 <th:block th:insert="fragments/header.html"]></th:block>
 
 <h2>Showing content from <em th:text="${originalUrl}"></em> below:</h2>
+<th:block th:if="${not #lists.isEmpty(parsedHtmlPage.navigation)}">
+    <h4>Website Navigation</h4>
+    <ul>
+        <li th:each="element: ${parsedHtmlPage.navigation}">
+            <th:block th:utext="${element}"></th:block>
+        </li>
+    </ul>
+    <br>
+</th:block>
 <h3 th:text="${parsedHtmlPage.title}"></h3>
 <th:block th:utext="${parsedHtmlPage.htmlContent}"></th:block>
 
