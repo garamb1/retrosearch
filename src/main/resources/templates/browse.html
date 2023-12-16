@@ -1,10 +1,10 @@
-<th:block th:insert="fragments/doctype.html"]></th:block>
+<th:block th:insert="fragments/doctype.html"></th:block>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>RetroSearch Browse</title>
 </head>
 <body>
-<th:block th:insert="fragments/header.html"]></th:block>
+<th:block th:insert="fragments/header.html"></th:block>
 
 <h2>Showing content from <em th:text="${originalUrl}"></em> below:</h2>
 <th:block th:if="${not #lists.isEmpty(parsedHtmlPage.navigation)}">
@@ -19,6 +19,6 @@
 <h3 th:text="${parsedHtmlPage.title}"></h3>
 <th:block th:utext="${parsedHtmlPage.htmlContent}"></th:block>
 
-<th:block th:insert="fragments/footer.html"]></th:block>
+<th:block th:insert="fragments/footer.html"></th:block>
 </body>
 </html>
