@@ -17,6 +17,15 @@ RetroSearch is a Spring Web Application that presents very simple HTML pages whi
 It provides the ability to search the Web using DuckDuckGo with a custom scraper that loads the first page of results and allows you to browse pages in plain text.
 You can deploy it on your local network and access it from your old computer!
 
+## The News API
+
+RetroSearch can fetch news articles by using the GNews API, to allow this, configure your properties as follows:
+
+```
+retrosearch.news.enable=true
+retrosearch.news.api.key={YOUR_GNEWS_API_KEY}
+```
+
 ### WIP
 Currently in progress:
  - Improve the parsing abilities for the browsing functionality
