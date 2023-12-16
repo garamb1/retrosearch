@@ -22,7 +22,7 @@ You can deploy it on your local network and access it from your old computer!
 RetroSearch can fetch news articles by using the GNews API, to allow this, add the environment variables as follows when running the Docker image:
 
 ```
-docker run -d -p80:8080 garambo/retrosearch:{Retro Search Version} --restart unless-stopped -e NEWS_ACTIVE=true NEWS_API_KEY={your GNews API Key}
+docker run -e NEWS_ACTIVE=true -e NEWS_API_KEY={your GNews API Key} -d -p80:8080 garambo/retrosearch:{Retro Search Version} --restart unless-stopped
 ```
 
 If running locally, just replace the property values in `application.properties` or create a new Spring run configuration.
