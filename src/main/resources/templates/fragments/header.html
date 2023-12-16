@@ -4,4 +4,9 @@
     Search Query:<input type="text" th:value="${searchResults?.query}" name="query">
     <input type="submit" value="Go!">
 </form>
+
+<th:block th:if="${@environment.getProperty('retrosearch.news.enable')}">
+    <h4>Check out the latest <a href="/news">News</a>!</h4>
+</th:block>
+
 <br>

@@ -1,0 +1,26 @@
+<th:block th:insert="fragments/doctype.html"]></th:block>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RetroSearch News</title>
+</head>
+<body>
+<th:block th:insert="fragments/header.html"></th:block>
+
+<h2>Latest news</h2>
+<p>Updated: <em th:text="${updatedAt}"></em></p>
+<ul>
+    <li th:each="element: ${articles}">
+        <a th:href="@{ /browse(url=${element.url})}">
+            <h3 th:text="${element.title}"></h3>
+        </a>
+        <p>Source: <em th:text="${element.source?.name}"></em></p>
+        <p>Published: <em th:text="${element.publishedAt}"></em></p>
+        <p th:text="${element.description}"></p>
+    </li>
+</ul>
+<br>
+<p>News are fetched from <a href="https://gnews.io/">GNews</a> - For non-commercial projects or for development and testing purposes only</p>
+
+<th:block th:insert="fragments/footer.html"></th:block>
+</body>
+</html>
