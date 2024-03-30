@@ -3,6 +3,7 @@ package it.garambo.retrosearch.http;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,12 +28,12 @@ public class HttpServiceImpl implements HttpService {
 
   private final ResponseHandler<String> responseHandler;
 
-  private final Header[] defaultClientHeaders = {
-    new BasicHeader("charset", "UTF-8"),
-    new BasicHeader(
-        "User-Agent",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-  };
+  private final List<BasicHeader> defaultClientHeaders =
+      List.of(
+          new BasicHeader("charset", "UTF-8"),
+          new BasicHeader(
+              "User-Agent",
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"));
 
   public HttpServiceImpl(
       @Autowired HttpClientFactory clientFactory,
@@ -48,10 +49,30 @@ public class HttpServiceImpl implements HttpService {
 
   @Override
   public String get(URI uri, Map<String, String> params) throws IOException, URISyntaxException {
+    return get(uri, params, Collections.emptyList());
+  }
+
+  @Override
+  public String get(URI uri, List<Header> additionalHeaders)
+      throws IOException, URISyntaxException {
+    return get(uri, Collections.emptyMap(), additionalHeaders);
+  }
+
+  @Override
+  public String get(URI uri, Map<String, String> params, List<Header> additionalHeaders)
+      throws IOException, URISyntaxException {
     URIBuilder newUri = new URIBuilder(uri).setParameters(mapToNameValuePair(params));
     final HttpGet get = new HttpGet(newUri.build());
 
-    get.setHeaders(defaultClientHeaders);
+    Header[] requestHeaders = defaultClientHeaders.toArray(new Header[0]);
+
+    if (!CollectionUtils.isEmpty(additionalHeaders)) {
+      List<Header> newHeaders = new ArrayList<>(defaultClientHeaders);
+      newHeaders.addAll(additionalHeaders);
+      requestHeaders = newHeaders.toArray(new Header[0]);
+    }
+
+    get.setHeaders(requestHeaders);
     return clientFactory.createHttpClient().execute(get, responseHandler);
   }
 
@@ -59,7 +80,7 @@ public class HttpServiceImpl implements HttpService {
   public String post(URI uri, String body) throws IOException {
     final HttpPost post = new HttpPost(uri);
     post.setEntity(new StringEntity(body));
-    post.setHeaders(defaultClientHeaders);
+    post.setHeaders(defaultClientHeaders.toArray(new Header[0]));
     return clientFactory.createHttpClient().execute(post, responseHandler);
   }
 
