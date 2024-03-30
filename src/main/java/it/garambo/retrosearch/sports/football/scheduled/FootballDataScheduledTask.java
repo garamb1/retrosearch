@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "retrosearch.news.enable", havingValue = "true")
-public class FootballScheduledTask {
+@ConditionalOnProperty(value = "retrosearch.sports.football.enable", havingValue = "true")
+public class FootballDataScheduledTask {
 
   @Autowired private FootballDataOrgClient apiClient;
 
@@ -21,11 +21,11 @@ public class FootballScheduledTask {
   @Scheduled(fixedRate = 30 * 60 * 1000)
   private void updateFootballData() {
     try {
-      log.info("Updating article lists...");
+      log.info("Updating football result list...");
       FootballDataResponse footballData = apiClient.fetchFootballData();
       repository.updateAll(footballData.matches());
     } catch (Exception e) {
-      log.error("Article list update failed:", e);
+      log.error("Football result list update failed:", e);
     }
   }
 }
