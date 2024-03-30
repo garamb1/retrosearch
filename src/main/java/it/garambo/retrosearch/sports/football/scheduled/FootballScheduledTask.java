@@ -2,7 +2,7 @@ package it.garambo.retrosearch.sports.football.scheduled;
 
 import it.garambo.retrosearch.sports.football.client.FootballDataOrgClient;
 import it.garambo.retrosearch.sports.football.model.FootballDataResponse;
-import it.garambo.retrosearch.sports.football.repository.FootballDataRepository;
+import it.garambo.retrosearch.sports.football.repository.FootballRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @ConditionalOnProperty(value = "retrosearch.news.enable", havingValue = "true")
-public class FootballDataScheduledTask {
+public class FootballScheduledTask {
 
   @Autowired private FootballDataOrgClient apiClient;
 
-  @Autowired private FootballDataRepository repository;
+  @Autowired private FootballRepository repository;
 
   @Scheduled(fixedRate = 30 * 60 * 1000)
   private void updateFootballData() {

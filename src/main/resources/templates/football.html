@@ -1,0 +1,30 @@
+<th:block th:insert="fragments/doctype.html"></th:block>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RetroSearch Sports - Football</title>
+</head>
+<body>
+<th:block th:insert="fragments/header.html"></th:block>
+<h2>Latest Football Results</h2>
+<p>Updated: <em th:text="${updatedAt}"></em></p>
+<ul>
+    <li th:each="matchesByCountry: ${results}">
+        <h3 th:text="matchesByCountry.key"></h3>
+        <ul>
+            <li th:each="match: matchesByCountry.key.value">
+                <p th:text="${match.utcDate}"></p>
+                <p th:text="${match.competition.name}"></p>
+                <p th:text="${match.homeTeam.name}"></p>
+                <p th:text="${match.awayTeam.name}"></p>
+                <p th:text="${match.awayTeam.name}"></p>
+                <p th:text="${match.score.fullTime}"></p>
+            </li>
+        </ul>
+    </li>
+</ul>
+<br>
+<p>Results from <a href="https://football-data.org/">football-data.org</a></p>
+
+<th:block th:insert="fragments/footer.html"></th:block>
+</body>
+</html>

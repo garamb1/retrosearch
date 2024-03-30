@@ -1,7 +1,6 @@
 package it.garambo.retrosearch.sports.football.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.garambo.retrosearch.PrimaryTestConfiguration;
@@ -9,6 +8,7 @@ import it.garambo.retrosearch.sports.football.model.FootballDataResponse;
 import it.garambo.retrosearch.sports.football.model.match.Match;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,9 +20,9 @@ import org.springframework.core.io.Resource;
 
 @SpringBootTest(classes = PrimaryTestConfiguration.class)
 @ExtendWith(MockitoExtension.class)
-class InMemoryFootballDataRepositoryTest {
+class InMemoryFootballRepositoryTest {
 
-  @Autowired FootballDataRepository repository;
+  @Autowired FootballRepository repository;
 
   @Test
   void testUpdate(@Value("classpath:sports/football/response.json") Resource responseJson)
@@ -33,6 +33,10 @@ class InMemoryFootballDataRepositoryTest {
     assertNotNull(response);
     repository.updateAll(response.matches());
     assertNotNull(repository.getUpdatedAt());
+
+    Map<String, Set<Match>> matches = repository.getAllMatches();
+    assertEquals(7, matches.keySet().size());
+    assertTrue(matches.containsKey("Italy"));
 
     Set<Match> italianMatches = repository.getAllMatchesByArea("Italy");
     assertEquals(5, italianMatches.size());
