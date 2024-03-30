@@ -24,7 +24,7 @@ public class FootballDataOrgClient {
 
   @Autowired HttpService httpService;
 
-  public FootballDataResponse getFootballData() throws IOException, URISyntaxException {
+  public FootballDataResponse fetchFootballData() throws IOException, URISyntaxException {
     URI apiUri = new URI(API_URL);
     BasicHeader apiKeyHeader = new BasicHeader("X-Auth-Token", apiKey);
 

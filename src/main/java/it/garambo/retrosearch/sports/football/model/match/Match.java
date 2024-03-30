@@ -1,9 +1,11 @@
 package it.garambo.retrosearch.sports.football.model.match;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import it.garambo.retrosearch.sports.football.model.match.enums.Status;
 import java.util.Date;
 import org.jetbrains.annotations.NotNull;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record Match(
     int id,
     Date utcDate,
