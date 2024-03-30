@@ -9,14 +9,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @ConditionalOnProperty(value = "retrosearch.sports.football.enable", havingValue = "true")
-public class InMemoryFootballDataRepository implements FootballDataRepository {
+public class InMemoryFootballRepository implements FootballRepository {
 
-  private Map<String, Set<Match>> matchByArea;
+  private Map<String, Set<Match>> matchesByArea;
   private Date updatedAt;
 
   @Override
+  public Map<String, Set<Match>> getAllMatches() {
+    return matchesByArea;
+  }
+
+  @Override
   public Set<Match> getAllMatchesByArea(String areaName) {
-    return matchByArea.get(areaName);
+    return matchesByArea.get(areaName);
   }
 
   @Override
@@ -29,7 +34,7 @@ public class InMemoryFootballDataRepository implements FootballDataRepository {
           updatedMatches.get(areaName).add(match);
         });
     log.info("Football Results updated");
-    matchByArea = updatedMatches;
+    matchesByArea = updatedMatches;
     updatedAt = new Date();
   }
 

@@ -13,6 +13,8 @@ public record Match(
     Area area,
     Status status,
     Competition competition,
+    Team homeTeam,
+    Team awayTeam,
     Score score)
     implements Comparable<Match> {
 
