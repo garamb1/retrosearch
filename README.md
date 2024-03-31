@@ -17,6 +17,8 @@ RetroSearch is a Spring Web Application that presents very simple HTML pages whi
 It provides the ability to search the Web using DuckDuckGo with a custom scraper that loads the first page of results and allows you to browse pages in plain text.
 You can deploy it on your local network and access it from your old computer!
 
+## News and sports APIs support
+
 ### Enabling the News API
 
 RetroSearch can fetch news articles by using the GNews API, to allow this, add the environment variables as follows when running the Docker image:
@@ -25,7 +27,22 @@ RetroSearch can fetch news articles by using the GNews API, to allow this, add t
 docker run -e NEWS_ACTIVE=true -e NEWS_API_KEY={your GNews API Key} -d -p80:8080 garambo/retrosearch:{Retro Search Version} --restart unless-stopped
 ```
 
+### Enabling the football-data.org API
+
+RetroSearch can fetch the latest football scores using the football-data.org API, to allow this, add the environment variables as follows when running the Docker image:
+
+```
+docker run -e FOOTBALL_API_ACTIVE=true -e FOOTBALL_API_KEY={your football-data.org API Key} -d -p80:8080 garambo/retrosearch:{Retro Search Version} --restart unless-stopped
+```
+
+### Enabling both
+
+```
+docker run -e NEWS_ACTIVE=true -e NEWS_API_KEY={your GNews API Key} FOOTBALL_API_ACTIVE=true -e FOOTBALL_API_KEY={your football-data.org API Key} -d -p80:8080 garambo/retrosearch:{Retro Search Version} --restart unless-stopped
+```
+
 If running locally, just replace the property values in `application.properties` or create a new Spring run configuration.
+
 
 ### WIP
 Currently in progress:
