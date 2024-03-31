@@ -33,7 +33,7 @@ public class InMemoryFootballRepository implements FootballRepository {
           updatedMatches.putIfAbsent(areaName, new HashSet<>());
           updatedMatches.get(areaName).add(match);
         });
-    log.info("Football Results updated");
+    log.info("Football scores updated");
     matchesByArea = updatedMatches;
     updatedAt = new Date();
   }
