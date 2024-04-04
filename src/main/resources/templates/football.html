@@ -5,8 +5,8 @@
 </head>
 <body>
 <th:block th:insert="fragments/header.html"></th:block>
-<h2>Latest football scores</h2>
-<p>Updated: <em th:text="${updatedAt}"></em></p>
+<h2>Football scores</h2>
+<p>Updated every 30 minutes, last update: <em th:text="${updatedAt}"></em></p>
 <ul>
     <li th:each="matchesByCountry: ${results}">
         <h3 th:text="${matchesByCountry.key}"></h3>
