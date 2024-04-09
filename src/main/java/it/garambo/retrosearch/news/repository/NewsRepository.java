@@ -3,14 +3,13 @@ package it.garambo.retrosearch.news.repository;
 import it.garambo.retrosearch.news.model.Article;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface NewsRepository {
 
-  List<Article> getAllArticles();
+  Map<String, List<Article>> getAllArticles();
 
-  Article getArticle(int index);
-
-  void updateAll(List<Article> newArticles);
+  void updateAll(Map<String, List<Article>> newArticles);
 
   Date getUpdatedAt();
 }

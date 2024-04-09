@@ -23,14 +23,15 @@ public class GNewsApiClient {
 
   @Autowired HttpService httpService;
 
-  public GNewsApiResponse fetchNews() throws URISyntaxException, IOException {
+  public GNewsApiResponse fetchNews(String language, String country)
+      throws URISyntaxException, IOException {
     URI apiUri = new URI(API_URL);
     Map<String, String> params =
         Map.of(
             "category", "general",
             "max", "10",
-            "lang", "en",
-            "country", "us",
+            "lang", language,
+            "country", country,
             "apikey", apiKey);
 
     String response = httpService.get(apiUri, params);
