@@ -6,7 +6,7 @@
 <body>
 <th:block th:insert="fragments/header.html"></th:block>
 
-<h2>Latest news</h2>
+<h2>Latest news | <em th:text="${country}"></em></h2>
 <p>Updated: <em th:text="${updatedAt}"></em></p>
 <ul>
     <li th:each="element: ${articles}">

@@ -7,9 +7,11 @@ import java.util.Map;
 
 public interface NewsRepository {
 
-  Map<String, List<Article>> getAllArticles();
+  List<Article> getArticlesByCountry(String country);
 
   void updateAll(Map<String, List<Article>> newArticles);
 
   Date getUpdatedAt();
+
+  boolean isCountrySupported(String country);
 }

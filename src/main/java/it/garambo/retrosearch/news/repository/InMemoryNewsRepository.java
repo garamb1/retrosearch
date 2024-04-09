@@ -1,5 +1,7 @@
 package it.garambo.retrosearch.news.repository;
 
+import static java.util.Objects.isNull;
+
 import it.garambo.retrosearch.news.model.Article;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +19,13 @@ public class InMemoryNewsRepository implements NewsRepository {
   private Date updatedAt;
 
   @Override
-  public Map<String, List<Article>> getAllArticles() {
-    return articles;
+  public List<Article> getArticlesByCountry(String country) {
+    return articles.get(country);
+  }
+
+  @Override
+  public boolean isCountrySupported(String country) {
+    return !isNull(articles) && articles.containsKey(country);
   }
 
   @Override
