@@ -38,9 +38,10 @@ public class NewsScheduledTask {
         .execute(
             () -> {
               for (Locale locale : locales) {
+                String language = locale.getLanguage().toLowerCase();
+                String country = locale.getCountry().toLowerCase();
                 try {
-                  List<Article> articles =
-                      apiClient.fetchNews(locale.getLanguage(), locale.getCountry()).articles();
+                  List<Article> articles = apiClient.fetchNews(language, country).articles();
                   newArticles.put(locale.getDisplayCountry(), articles);
                   log.info("Fetched news for {}", locale);
                   Thread.sleep(settings.getRateLimiter());
