@@ -1,10 +1,25 @@
 <a href="/"><img th:src="@{__${@logoPath}__}" alt="A RetroSearch Logo"></a>
-<th:block th:if="${@environment.getProperty('retrosearch.news.enable') and
+
+<th:block th:if="${@environment.getProperty('retrosearch.news.enable') or
                    @environment.getProperty('retrosearch.sports.football.enable')}">
-    <h4><a href="/">Search and Browse</a> - <a href="/news">News</a> - <a href="/football">Football scores</a></h4>
+<h4>
+    <a href="/">Home</a>
+    <th:block th:if="${@environment.getProperty('retrosearch.news.enable')}">
+        - News (
+        <th:block th:each="locale,iteration: ${@newsSettings.getLocales()}">
+            <a th:href="@{ /news(country=${locale.getDisplayCountry()}) }" th:text="${locale.getDisplayCountry()}"></a>
+            <th:block th:text="${!iteration.last ? '|' : ''}"></th:block>
+        </th:block>
+        )
+    </th:block>
+
+    <th:block th:if="${@environment.getProperty('retrosearch.sports.football.enable')}">
+        - <a href="/football">Football scores</a>
+    </th:block>
+</h4>
 </th:block>
+
 <form action="/search" method="get">
     Search Query:<input type="text" th:value="${searchResults?.query}" name="query">
     <input type="submit" value="Go!">
 </form>
-<br>

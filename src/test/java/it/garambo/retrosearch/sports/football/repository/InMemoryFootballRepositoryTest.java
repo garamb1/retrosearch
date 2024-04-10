@@ -22,7 +22,7 @@ import org.springframework.core.io.Resource;
 @ExtendWith(MockitoExtension.class)
 class InMemoryFootballRepositoryTest {
 
-  @Autowired FootballRepository repository;
+  @Autowired FootballRepository footballRepository;
 
   @Test
   void testUpdate(@Value("classpath:sports/football/response.json") Resource responseJson)
@@ -31,14 +31,14 @@ class InMemoryFootballRepositoryTest {
     FootballDataResponse response =
         new ObjectMapper().readValue(content, FootballDataResponse.class);
     assertNotNull(response);
-    repository.updateAll(response.matches());
-    assertNotNull(repository.getUpdatedAt());
+    footballRepository.updateAll(response.matches());
+    assertNotNull(footballRepository.getUpdatedAt());
 
-    Map<String, Set<Match>> matches = repository.getAllMatches();
+    Map<String, Set<Match>> matches = footballRepository.getAllMatches();
     assertEquals(7, matches.keySet().size());
     assertTrue(matches.containsKey("Italy"));
 
-    Set<Match> italianMatches = repository.getAllMatchesByArea("Italy");
+    Set<Match> italianMatches = footballRepository.getAllMatchesByArea("Italy");
     assertEquals(5, italianMatches.size());
   }
 }

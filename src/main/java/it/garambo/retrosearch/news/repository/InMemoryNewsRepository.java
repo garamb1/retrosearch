@@ -1,8 +1,11 @@
 package it.garambo.retrosearch.news.repository;
 
+import static java.util.Objects.isNull;
+
 import it.garambo.retrosearch.news.model.Article;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -12,24 +15,24 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "retrosearch.news.enable", havingValue = "true")
 public class InMemoryNewsRepository implements NewsRepository {
 
-  private List<Article> articles;
+  private Map<String, List<Article>> articles;
   private Date updatedAt;
 
   @Override
-  public List<Article> getAllArticles() {
-    return articles;
+  public List<Article> getArticlesByCountry(String country) {
+    return articles.get(country);
   }
 
   @Override
-  public Article getArticle(int index) {
-    return articles.get(index);
+  public boolean isCountrySupported(String country) {
+    return !isNull(articles) && articles.containsKey(country);
   }
 
   @Override
-  public void updateAll(List<Article> newArticles) {
+  public void updateAll(Map<String, List<Article>> newArticles) {
     articles = newArticles;
     updatedAt = new Date();
-    log.info("Article list updated");
+    log.info("Article list updated, news loaded for {}", articles.keySet());
   }
 
   @Override
