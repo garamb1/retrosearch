@@ -22,6 +22,11 @@ public class RetroSearchController {
   @Autowired private UrlValidator urlValidator;
   @Autowired private ModernHtmlParser htmlParser;
 
+  @GetMapping("/")
+  public String home() {
+    return "home";
+  }
+
   @GetMapping("/search")
   public String search(
       @RequestParam() Optional<String> query, @RequestParam Optional<String> locale, Model model) {
