@@ -20,6 +20,17 @@
 </th:block>
 
 <form action="/search" method="get">
-    Search Query:<input type="text" th:value="${searchResults?.query}" name="query">
+    Search Query:
+    <input type="text" th:value="${searchResults?.query}" name="query">
+
+    <th:block th:unless="${#lists.isEmpty(@newsSettings.getLocales())}">
+        <select name="locale">
+            <option th:each="locale: ${@newsSettings.getLocales()}"
+                    th:text="${locale.getDisplayCountry()}"
+                    th:value="${locale.toString()}"
+                    th:selected="${searchResults?.locale == locale.toString()}">
+        </select>
+    </th:block>
+
     <input type="submit" value="Go!">
 </form>

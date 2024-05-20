@@ -29,8 +29,10 @@ public class DDGClientImpl implements DDGClient {
   public SearchResults search(String query, String locale) throws IOException, URISyntaxException {
     Map<String, String> searchParams =
         Map.of(
-            DDGConstants.QUERY_PARAM_NAME, query,
-            DDGConstants.REGION_PARAM_NAME, locale);
+            DDGConstants.QUERY_PARAM_NAME,
+            query,
+            DDGConstants.REGION_PARAM_NAME,
+            getDDGLocale(locale));
 
     String resultPage = httpService.get(URI.create(DDGConstants.BASE_URL), searchParams);
     List<ResultEntry> resultEntryList = ddgScraper.scrapeResults(resultPage);
@@ -40,5 +42,9 @@ public class DDGClientImpl implements DDGClient {
         .locale(locale)
         .resultEntries(resultEntryList)
         .build();
+  }
+
+  private String getDDGLocale(String locale) {
+    return locale.toLowerCase().replace("_", "-");
   }
 }
