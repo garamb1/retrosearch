@@ -38,12 +38,18 @@ public class BeanConfig {
   }
 
   @Bean
+  public SearchSettings searchSettings(
+      @Value("${retrosearch.search.locales:}") List<String> localeList) {
+    List<Locale> locales = localeList.stream().map(StringUtils::parseLocaleString).toList();
+    return new SearchSettings(locales);
+  }
+
+  @Bean
   public NewsSettings newsSettings(
       @Value("${retrosearch.news.enable}") boolean enabled,
       @Value("${retrosearch.news.api.locales}") List<String> localeList,
       @Value("${retrosearch.news.api.rate.limiter}") long rateLimiter) {
     List<Locale> locales = localeList.stream().map(StringUtils::parseLocaleString).toList();
-
     return new NewsSettings(enabled, rateLimiter, locales);
   }
 
