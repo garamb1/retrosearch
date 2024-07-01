@@ -2,7 +2,6 @@ package it.garambo.retrosearch.configuration;
 
 import java.util.List;
 import java.util.Locale;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
