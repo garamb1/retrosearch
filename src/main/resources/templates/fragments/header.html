@@ -23,9 +23,9 @@
     Search Query:
     <input type="text" th:value="${searchResults?.query}" name="query">
 
-    <th:block th:unless="${#lists.isEmpty(@newsSettings.getLocales())}">
+    <th:block th:unless="${#lists.isEmpty(@searchSettings.getLocales())}">
         <select name="locale">
-            <option th:each="locale: ${@newsSettings.getLocales()}"
+            <option th:each="locale: ${@searchSettings.getLocales()}"
                     th:text="${locale.getDisplayCountry()}"
                     th:value="${locale.toString()}"
                     th:selected="${searchResults?.locale == locale.toString()}">
