@@ -2,6 +2,8 @@ package it.garambo.retrosearch.configuration;
 
 import java.util.List;
 import java.util.Locale;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
+@Slf4j
 @Configuration
 @EnableScheduling
 public class BeanConfig {
@@ -39,8 +42,9 @@ public class BeanConfig {
 
   @Bean
   public SearchSettings searchSettings(
-      @Value("${retrosearch.search.locales:}") List<String> localeList) {
+      @Value("${retrosearch.search.locales}") List<String> localeList) {
     List<Locale> locales = localeList.stream().map(StringUtils::parseLocaleString).toList();
+    log.info("Initialising search locales: {}", locales);
     return new SearchSettings(locales);
   }
 
