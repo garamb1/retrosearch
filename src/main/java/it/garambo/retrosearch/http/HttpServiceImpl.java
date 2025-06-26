@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -24,7 +25,7 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class HttpServiceImpl implements HttpService {
 
-  private final HttpClientFactory clientFactory;
+  private final HttpClient httpClient;
 
   private final ResponseHandler<String> responseHandler;
 
@@ -36,9 +37,8 @@ public class HttpServiceImpl implements HttpService {
               "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"));
 
   public HttpServiceImpl(
-      @Autowired HttpClientFactory clientFactory,
-      @Autowired ResponseHandler<String> responseHandler) {
-    this.clientFactory = clientFactory;
+      @Autowired HttpClient httpClient, @Autowired ResponseHandler<String> responseHandler) {
+    this.httpClient = httpClient;
     this.responseHandler = responseHandler;
   }
 
@@ -73,7 +73,7 @@ public class HttpServiceImpl implements HttpService {
     }
 
     get.setHeaders(requestHeaders);
-    return clientFactory.createHttpClient().execute(get, responseHandler);
+    return httpClient.execute(get, responseHandler);
   }
 
   @Override
@@ -81,14 +81,14 @@ public class HttpServiceImpl implements HttpService {
     final HttpPost post = new HttpPost(uri);
     post.setEntity(new StringEntity(body));
     post.setHeaders(defaultClientHeaders.toArray(new Header[0]));
-    return clientFactory.createHttpClient().execute(post, responseHandler);
+    return httpClient.execute(post, responseHandler);
   }
 
   @Override
   public String post(URI uri, Map<String, String> formData) throws IOException, URISyntaxException {
     URIBuilder newUri = new URIBuilder(uri).setParameters(mapToNameValuePair(formData));
     final HttpPost post = new HttpPost(newUri.build());
-    return clientFactory.createHttpClient().execute(post, responseHandler);
+    return httpClient.execute(post, responseHandler);
   }
 
   private List<NameValuePair> mapToNameValuePair(Map<String, String> map) {

@@ -22,44 +22,32 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class HttpServiceImplTest {
 
   @Test
-  void testGet(
-      @Mock HttpClient httpClient,
-      @Mock HttpClientFactory clientFactory,
-      @Mock ResponseHandler<String> responseHandler)
+  void testGet(@Mock HttpClient httpClient, @Mock ResponseHandler<String> responseHandler)
       throws IOException, URISyntaxException {
 
-    when(clientFactory.createHttpClient()).thenReturn(httpClient);
     when(httpClient.execute(any(HttpGet.class), eq(responseHandler))).thenReturn("Success");
 
-    HttpService httpService = new HttpServiceImpl(clientFactory, responseHandler);
+    HttpService httpService = new HttpServiceImpl(httpClient, responseHandler);
     assertEquals("Success", httpService.get(new URI("http://test.com")));
   }
 
   @Test
-  void testPost(
-      @Mock HttpClient httpClient,
-      @Mock HttpClientFactory clientFactory,
-      @Mock ResponseHandler<String> responseHandler)
+  void testPost(@Mock HttpClient httpClient, @Mock ResponseHandler<String> responseHandler)
       throws IOException, URISyntaxException {
 
-    when(clientFactory.createHttpClient()).thenReturn(httpClient);
     when(httpClient.execute(any(HttpPost.class), eq(responseHandler))).thenReturn("Success");
 
-    HttpService httpService = new HttpServiceImpl(clientFactory, responseHandler);
+    HttpService httpService = new HttpServiceImpl(httpClient, responseHandler);
     assertEquals("Success", httpService.post(new URI("http://test.com"), "post-body"));
   }
 
   @Test
-  void testPostFormData(
-      @Mock HttpClient httpClient,
-      @Mock HttpClientFactory clientFactory,
-      @Mock ResponseHandler<String> responseHandler)
+  void testPostFormData(@Mock HttpClient httpClient, @Mock ResponseHandler<String> responseHandler)
       throws IOException, URISyntaxException {
 
-    when(clientFactory.createHttpClient()).thenReturn(httpClient);
     when(httpClient.execute(any(HttpPost.class), eq(responseHandler))).thenReturn("Success");
 
-    HttpService httpService = new HttpServiceImpl(clientFactory, responseHandler);
+    HttpService httpService = new HttpServiceImpl(httpClient, responseHandler);
     Map<String, String> formData = Map.of("key", "value");
     assertEquals("Success", httpService.post(new URI("http://test.com"), formData));
   }

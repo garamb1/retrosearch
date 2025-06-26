@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,11 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 @Configuration
 @EnableScheduling
 public class BeanConfig {
+
+  @Bean
+  public HttpClient httpClient() {
+    return HttpClientBuilder.create().build();
+  }
 
   @Bean
   public UrlValidator urlValidator() {
