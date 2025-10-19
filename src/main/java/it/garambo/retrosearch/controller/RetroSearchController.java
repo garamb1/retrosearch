@@ -9,10 +9,12 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -74,5 +76,15 @@ public class RetroSearchController {
   @GetMapping("/about")
   public String about() {
     return "about";
+  }
+
+  @GetMapping(value = "/robots.txt", produces = MediaType.TEXT_PLAIN_VALUE)
+  @ResponseBody
+  public String robots() {
+    return """
+            User-agent: *
+            Disallow: /search
+            Disallow: /browse
+            """;
   }
 }
