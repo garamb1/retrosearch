@@ -1,5 +1,11 @@
 package it.garambo.retrosearch.configuration;
 
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.BandwidthBuilder;
+import io.github.bucket4j.Bucket;
+import it.garambo.retrosearch.controller.RateLimitingFilter;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +14,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -20,6 +28,25 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 @Configuration
 @EnableScheduling
 public class BeanConfig {
+
+  @Bean
+  @ConditionalOnProperty(value = "retrosearch.ratelimiting.enable", havingValue = "true")
+  public Bucket rateLimitingBucket(
+      @Value("${retrosearch.ratelimiting.duration.seconds:1}") Integer minutesDuration,
+      @Value("${retrosearch.ratelimiting.requests.count:5}") Integer numberOfRequests) {
+    Bandwidth limit =
+        BandwidthBuilder.builder()
+            .capacity(numberOfRequests)
+            .refillGreedy(numberOfRequests, Duration.of(minutesDuration, ChronoUnit.SECONDS))
+            .build();
+    return Bucket.builder().addLimit(limit).build();
+  }
+
+  @Bean
+  @ConditionalOnProperty(value = "retrosearch.ratelimiting.enable", havingValue = "true")
+  public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter(Bucket rateLimitingBucket) {
+    return new FilterRegistrationBean<>(new RateLimitingFilter(rateLimitingBucket));
+  }
 
   @Bean
   public HttpClient httpClient() {
