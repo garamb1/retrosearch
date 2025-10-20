@@ -32,20 +32,22 @@ public class BeanConfig {
   @Bean
   @ConditionalOnProperty(value = "retrosearch.ratelimiting.enable", havingValue = "true")
   public Bucket rateLimitingBucket(
-      @Value("${retrosearch.ratelimiting.duration.seconds:1}") Integer minutesDuration,
+      @Value("${retrosearch.ratelimiting.duration.seconds:1}") Integer secondsDuration,
       @Value("${retrosearch.ratelimiting.requests.count:5}") Integer numberOfRequests) {
     Bandwidth limit =
         BandwidthBuilder.builder()
             .capacity(numberOfRequests)
-            .refillGreedy(numberOfRequests, Duration.of(minutesDuration, ChronoUnit.SECONDS))
+            .refillGreedy(numberOfRequests, Duration.of(secondsDuration, ChronoUnit.SECONDS))
             .build();
     return Bucket.builder().addLimit(limit).build();
   }
 
   @Bean
   @ConditionalOnProperty(value = "retrosearch.ratelimiting.enable", havingValue = "true")
-  public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter(Bucket rateLimitingBucket) {
-    return new FilterRegistrationBean<>(new RateLimitingFilter(rateLimitingBucket));
+  public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter(
+      Bucket rateLimitingBucket,
+      @Value("${retrosearch.ratelimiting.exclude.paths:img/*}") List<String> excludedPaths) {
+    return new FilterRegistrationBean<>(new RateLimitingFilter(rateLimitingBucket, excludedPaths));
   }
 
   @Bean
