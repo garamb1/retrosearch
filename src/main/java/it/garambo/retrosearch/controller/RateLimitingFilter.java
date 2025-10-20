@@ -40,7 +40,6 @@ public class RateLimitingFilter extends OncePerRequestFilter {
 
   @Override
   protected boolean shouldNotFilter(@NotNull HttpServletRequest request) {
-    return excludedPaths.stream()
-        .anyMatch(e -> pathMatcher.match(e, request.getServletPath()));
+    return excludedPaths.stream().anyMatch(e -> pathMatcher.match(e, request.getServletPath()));
   }
 }
