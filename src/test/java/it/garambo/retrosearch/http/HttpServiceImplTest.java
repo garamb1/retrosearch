@@ -2,52 +2,66 @@ package it.garambo.retrosearch.http;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class HttpServiceImplTest {
 
+  private HttpService httpService;
+  private CloseableHttpClient httpClient;
+
+  @BeforeEach
+  void setup() {
+    httpClient = mock(CloseableHttpClient.class);
+    httpService = new HttpServiceImpl(httpClient);
+  }
+
+  private static @NotNull CloseableHttpResponse getMockSuccessfulResponse(String content)
+      throws IOException {
+    CloseableHttpResponse response = mock(CloseableHttpResponse.class);
+    HttpEntity entity = mock(HttpEntity.class);
+    when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes()));
+    when(response.getEntity()).thenReturn(entity);
+    return response;
+  }
+
   @Test
-  void testGet(@Mock HttpClient httpClient, @Mock ResponseHandler<String> responseHandler)
-      throws IOException, URISyntaxException {
+  void testGet() throws IOException, URISyntaxException {
+    CloseableHttpResponse response = getMockSuccessfulResponse("Success");
+    when(httpClient.execute(any())).thenReturn(response);
 
-    when(httpClient.execute(any(HttpGet.class), eq(responseHandler))).thenReturn("Success");
-
-    HttpService httpService = new HttpServiceImpl(httpClient, responseHandler);
     assertEquals("Success", httpService.get(new URI("http://test.com")));
   }
 
   @Test
-  void testPost(@Mock HttpClient httpClient, @Mock ResponseHandler<String> responseHandler)
-      throws IOException, URISyntaxException {
+  void testPost() throws IOException, URISyntaxException {
+    CloseableHttpResponse response = getMockSuccessfulResponse("Success");
+    when(httpClient.execute(any(HttpPost.class))).thenReturn(response);
 
-    when(httpClient.execute(any(HttpPost.class), eq(responseHandler))).thenReturn("Success");
-
-    HttpService httpService = new HttpServiceImpl(httpClient, responseHandler);
     assertEquals("Success", httpService.post(new URI("http://test.com"), "post-body"));
   }
 
   @Test
-  void testPostFormData(@Mock HttpClient httpClient, @Mock ResponseHandler<String> responseHandler)
-      throws IOException, URISyntaxException {
+  void testPostFormData() throws IOException, URISyntaxException {
+    CloseableHttpResponse response = getMockSuccessfulResponse("Success");
+    when(httpClient.execute(any(HttpPost.class))).thenReturn(response);
 
-    when(httpClient.execute(any(HttpPost.class), eq(responseHandler))).thenReturn("Success");
-
-    HttpService httpService = new HttpServiceImpl(httpClient, responseHandler);
     Map<String, String> formData = Map.of("key", "value");
     assertEquals("Success", httpService.post(new URI("http://test.com"), formData));
   }

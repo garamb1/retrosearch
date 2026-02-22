@@ -8,10 +8,14 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -51,8 +55,30 @@ public class BeanConfig {
   }
 
   @Bean
-  public HttpClient httpClient() {
-    return HttpClientBuilder.create().build();
+  public HttpClientConnectionManager connectionManager() {
+    PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+    cm.setMaxTotal(200);
+    cm.setDefaultMaxPerRoute(50);
+    cm.setValidateAfterInactivity(5000);
+    return cm;
+  }
+
+  @Bean
+  public CloseableHttpClient httpClient(HttpClientConnectionManager connectionManager) {
+    return HttpClients.custom()
+        .setConnectionManager(connectionManager)
+        .evictExpiredConnections()
+        .evictIdleConnections(10, TimeUnit.SECONDS)
+        .build();
+  }
+
+  @Bean
+  public RequestConfig requestConfig() {
+    return RequestConfig.custom()
+        .setConnectTimeout(5000)
+        .setSocketTimeout(10000)
+        .setConnectionRequestTimeout(5000)
+        .build();
   }
 
   @Bean
