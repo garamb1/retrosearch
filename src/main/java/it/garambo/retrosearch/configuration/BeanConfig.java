@@ -59,17 +59,8 @@ public class BeanConfig {
     PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
     cm.setMaxTotal(200);
     cm.setDefaultMaxPerRoute(50);
-    cm.setValidateAfterInactivity(5000);
+    cm.setValidateAfterInactivity(1000);
     return cm;
-  }
-
-  @Bean
-  public CloseableHttpClient httpClient(HttpClientConnectionManager connectionManager) {
-    return HttpClients.custom()
-        .setConnectionManager(connectionManager)
-        .evictExpiredConnections()
-        .evictIdleConnections(10, TimeUnit.SECONDS)
-        .build();
   }
 
   @Bean
@@ -78,6 +69,18 @@ public class BeanConfig {
         .setConnectTimeout(5000)
         .setSocketTimeout(10000)
         .setConnectionRequestTimeout(5000)
+        .build();
+  }
+
+  @Bean
+  public CloseableHttpClient closeableHttpClient(
+      HttpClientConnectionManager connectionManager, RequestConfig requestConfig) {
+    return HttpClients.custom()
+        .setConnectionManager(connectionManager)
+        .setDefaultRequestConfig(requestConfig)
+        .evictExpiredConnections()
+        .disableAutomaticRetries()
+        .evictIdleConnections(2, TimeUnit.SECONDS)
         .build();
   }
 

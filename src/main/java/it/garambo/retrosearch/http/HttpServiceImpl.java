@@ -3,7 +3,6 @@ package it.garambo.retrosearch.http;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +28,7 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class HttpServiceImpl implements HttpService {
 
-  private final CloseableHttpClient httpClient;
+  private final CloseableHttpClient closeableHttpClient;
 
   private final List<BasicHeader> defaultClientHeaders =
       List.of(
@@ -38,8 +37,8 @@ public class HttpServiceImpl implements HttpService {
               "User-Agent",
               "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"));
 
-  public HttpServiceImpl(@Autowired CloseableHttpClient httpClient) {
-    this.httpClient = httpClient;
+  public HttpServiceImpl(@Autowired CloseableHttpClient closeableHttpClient) {
+    this.closeableHttpClient = closeableHttpClient;
   }
 
   @Override
@@ -101,12 +100,21 @@ public class HttpServiceImpl implements HttpService {
   }
 
   private String executeRequest(HttpUriRequest request) throws IOException {
-    try (CloseableHttpResponse response = httpClient.execute(request)) {
+    try (CloseableHttpResponse response = closeableHttpClient.execute(request)) {
       HttpEntity entity = response.getEntity();
       if (entity == null) {
-        return "";
+        throw new IOException();
       }
-      return EntityUtils.toString(entity, StandardCharsets.UTF_8);
+
+      int statusCode = response.getStatusLine().getStatusCode();
+      if (statusCode >= 200 && statusCode < 400) {
+        return EntityUtils.toString(entity);
+      } else {
+        throw new IOException(
+            String.format(
+                "Response %s, got status code %s",
+                response.getStatusLine().getReasonPhrase(), statusCode));
+      }
     }
   }
 }

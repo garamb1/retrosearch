@@ -11,9 +11,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import org.apache.http.HttpEntity;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicStatusLine;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,15 +33,6 @@ class HttpServiceImplTest {
   void setup() {
     httpClient = mock(CloseableHttpClient.class);
     httpService = new HttpServiceImpl(httpClient);
-  }
-
-  private static @NotNull CloseableHttpResponse getMockSuccessfulResponse(String content)
-      throws IOException {
-    CloseableHttpResponse response = mock(CloseableHttpResponse.class);
-    HttpEntity entity = mock(HttpEntity.class);
-    when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes()));
-    when(response.getEntity()).thenReturn(entity);
-    return response;
   }
 
   @Test
@@ -64,5 +58,16 @@ class HttpServiceImplTest {
 
     Map<String, String> formData = Map.of("key", "value");
     assertEquals("Success", httpService.post(new URI("http://test.com"), formData));
+  }
+
+  private static @NotNull CloseableHttpResponse getMockSuccessfulResponse(String content)
+      throws IOException {
+    CloseableHttpResponse response = mock(CloseableHttpResponse.class);
+    StatusLine statusLine = new BasicStatusLine(new ProtocolVersion("http", 1, 1), 200, "success");
+    when(response.getStatusLine()).thenReturn(statusLine);
+    HttpEntity entity = mock(HttpEntity.class);
+    when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes()));
+    when(response.getEntity()).thenReturn(entity);
+    return response;
   }
 }
