@@ -14,27 +14,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.message.BasicHeader;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
-@Component
-@ConditionalOnProperty(value = "retrosearch.sports.football.enable", havingValue = "true")
+@AllArgsConstructor
 public class FootballDataOrgClient {
 
-  private final String API_URL = "https://api.football-data.org/v4/matches";
-
-  @Value("${retrosearch.sports.football.api.key:}")
-  private String apiKey;
-
-  @Autowired HttpService httpService;
+  private final String apiUrl;
+  private final String apiKey;
+  private final HttpService httpService;
 
   public FootballDataResponse fetchFootballData(LocalDate dateFrom, LocalDate dateTo)
       throws IOException, URISyntaxException {
-    URI apiUri = new URI(API_URL);
+    URI apiUri = new URI(apiUrl);
     Header apiKeyHeader = new BasicHeader("X-Auth-Token", apiKey);
 
     Map<String, String> params = new HashMap<>();
