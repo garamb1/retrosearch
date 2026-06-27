@@ -4,6 +4,7 @@ import static java.util.Objects.isNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.garambo.retrosearch.http.HttpService;
+import it.garambo.retrosearch.http.ParsedHttpResponse;
 import it.garambo.retrosearch.sports.football.model.FootballDataResponse;
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.http.message.BasicHeader;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,7 +35,7 @@ public class FootballDataOrgClient {
   public FootballDataResponse fetchFootballData(LocalDate dateFrom, LocalDate dateTo)
       throws IOException, URISyntaxException {
     URI apiUri = new URI(API_URL);
-    BasicHeader apiKeyHeader = new BasicHeader("X-Auth-Token", apiKey);
+    Header apiKeyHeader = new BasicHeader("X-Auth-Token", apiKey);
 
     Map<String, String> params = new HashMap<>();
     if (!isNull(dateFrom) && !isNull(dateTo)) {
@@ -43,7 +45,7 @@ public class FootballDataOrgClient {
       params.put("dateTo", formattedDateTo);
     }
 
-    String response = httpService.get(apiUri, params, List.of(apiKeyHeader));
-    return new ObjectMapper().readValue(response, FootballDataResponse.class);
+    ParsedHttpResponse response = httpService.get(apiUri, params, List.of(apiKeyHeader));
+    return new ObjectMapper().readValue(response.content(), FootballDataResponse.class);
   }
 }

@@ -2,6 +2,7 @@ package it.garambo.retrosearch.news.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.garambo.retrosearch.http.HttpService;
+import it.garambo.retrosearch.http.ParsedHttpResponse;
 import it.garambo.retrosearch.news.model.GNewsApiResponse;
 import java.io.IOException;
 import java.net.URI;
@@ -34,7 +35,7 @@ public class GNewsApiClient {
             "country", country,
             "apikey", apiKey);
 
-    String response = httpService.get(apiUri, params);
-    return new ObjectMapper().readValue(response, GNewsApiResponse.class);
+    ParsedHttpResponse response = httpService.get(apiUri, params);
+    return new ObjectMapper().readValue(response.content(), GNewsApiResponse.class);
   }
 }

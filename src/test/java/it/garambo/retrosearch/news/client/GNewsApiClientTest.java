@@ -2,11 +2,14 @@ package it.garambo.retrosearch.news.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import it.garambo.retrosearch.PrimaryTestConfiguration;
 import it.garambo.retrosearch.http.HttpService;
+import it.garambo.retrosearch.http.ParsedHttpResponse;
 import it.garambo.retrosearch.news.model.GNewsApiResponse;
 import java.io.IOException;
 import java.net.URI;
@@ -51,12 +54,30 @@ class GNewsApiClientTest {
             "apikey", "testKey");
 
     when(httpService.get(eq(uri), eq(params)))
-        .thenReturn(responseJson.getContentAsString(StandardCharsets.UTF_8));
-
+        .thenReturn(
+            ParsedHttpResponse.builder()
+                .content(responseJson.getContentAsString(StandardCharsets.UTF_8))
+                .build());
     GNewsApiResponse response = client.fetchNews("it", "it");
     assertNotNull(response);
     assertEquals(54904, response.totalArticles());
     assertNotNull(response.articles());
     assertEquals(1, response.articles().size());
+  }
+
+  @Test
+  void testFetchNewsFailed() throws IOException, URISyntaxException {
+    URI uri = new URI("https://gnews.io/api/v4/top-headlines");
+
+    Map<String, String> params =
+        Map.of(
+            "category", "general",
+            "max", "10",
+            "lang", "it",
+            "country", "it",
+            "apikey", "testKey");
+
+    doThrow(IOException.class).when(httpService).get(eq(uri), eq(params));
+    assertThrows(IOException.class, () -> client.fetchNews("it", "it"));
   }
 }

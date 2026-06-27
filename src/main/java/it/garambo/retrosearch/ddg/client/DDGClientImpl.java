@@ -5,6 +5,7 @@ import it.garambo.retrosearch.ddg.model.SearchResults;
 import it.garambo.retrosearch.ddg.scraper.DDGScraper;
 import it.garambo.retrosearch.ddg.util.DDGConstants;
 import it.garambo.retrosearch.http.HttpService;
+import it.garambo.retrosearch.http.ParsedHttpResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,8 +35,9 @@ public class DDGClientImpl implements DDGClient {
             DDGConstants.REGION_PARAM_NAME,
             getDDGLocale(locale));
 
-    String resultPage = httpService.get(URI.create(DDGConstants.BASE_URL), searchParams);
-    List<ResultEntry> resultEntryList = ddgScraper.scrapeResults(resultPage);
+    ParsedHttpResponse resultPage =
+        httpService.get(URI.create(DDGConstants.BASE_URL), searchParams);
+    List<ResultEntry> resultEntryList = ddgScraper.scrapeResults(resultPage.content());
 
     return SearchResults.builder()
         .query(query)

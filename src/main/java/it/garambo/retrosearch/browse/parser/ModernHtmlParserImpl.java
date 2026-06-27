@@ -3,6 +3,7 @@ package it.garambo.retrosearch.browse.parser;
 import it.garambo.retrosearch.browse.model.ParsedHtmlPage;
 import it.garambo.retrosearch.configuration.ApplicationSettings;
 import it.garambo.retrosearch.http.HttpService;
+import it.garambo.retrosearch.http.ParsedHttpResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,7 +30,8 @@ public class ModernHtmlParserImpl implements ModernHtmlParser {
 
   @Override
   public ParsedHtmlPage parsePage(URI uri) throws IOException, URISyntaxException {
-    Document document = Jsoup.parse(httpService.get(uri));
+    ParsedHttpResponse parsedHttpResponse = httpService.get(uri);
+    Document document = Jsoup.parse(parsedHttpResponse.content());
     Article article = parseArticle(uri, document);
     String title = article.getTitle();
     List<String> navigation = getPageNavigation(document.body());
@@ -37,6 +39,7 @@ public class ModernHtmlParserImpl implements ModernHtmlParser {
     return ParsedHtmlPage.builder()
         .title(title)
         .navigation(navigation)
+        .redirectTo(parsedHttpResponse.redirectionUri())
         .htmlContent(cleanPage(article.getContent(), true))
         .build();
   }
