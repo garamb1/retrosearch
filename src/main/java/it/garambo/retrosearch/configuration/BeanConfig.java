@@ -86,8 +86,7 @@ public class BeanConfig {
 
   @Bean("generalHttpService")
   public HttpService generalHttpService() {
-    CloseableHttpClient closeableHttpClient = createCloseableHttpClient();
-    return new HttpServiceImpl(closeableHttpClient);
+    return new HttpServiceImpl(createCloseableHttpClient());
   }
 
   @Bean("modernHtmlParser")
@@ -99,8 +98,7 @@ public class BeanConfig {
 
   @Bean("searchHttpService")
   public HttpService searchHttpService() {
-    CloseableHttpClient closeableHttpClient = createCloseableHttpClient();
-    return new HttpServiceImpl(closeableHttpClient);
+    return new HttpServiceImpl(createCloseableHttpClient());
   }
 
   @Bean
@@ -111,8 +109,7 @@ public class BeanConfig {
 
   @Bean("newsHttpService")
   public HttpService newsHttpService() {
-    CloseableHttpClient closeableHttpClient = createCloseableHttpClient();
-    return new HttpServiceImpl(closeableHttpClient);
+    return new HttpServiceImpl(createCloseableHttpClient());
   }
 
   @Bean

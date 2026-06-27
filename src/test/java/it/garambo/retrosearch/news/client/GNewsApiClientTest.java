@@ -19,25 +19,23 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = PrimaryTestConfiguration.class)
 class GNewsApiClientTest {
 
-  @Mock private HttpService httpService;
+  @Mock HttpService httpService;
 
-  @InjectMocks GNewsApiClient client;
+  GNewsApiClient client;
 
   @BeforeEach
   void setup() {
-    ReflectionTestUtils.setField(client, "apiKey", "testKey");
+    client = new GNewsApiClient("https://gnews.io/api/v4/top-headlines", "testKey", httpService);
   }
 
   @Test
