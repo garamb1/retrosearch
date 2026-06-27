@@ -70,7 +70,7 @@ class HttpServiceImplTest {
   }
 
   @Test
-  void testPostFormData() throws IOException, URISyntaxException {
+  void testPostFormDataWithRedirectionUrlSet() throws IOException, URISyntaxException {
     try (MockedStatic<EntityUtils> entityUtils = mockStatic(EntityUtils.class)) {
       entityUtils.when(() -> EntityUtils.toString(any())).thenReturn(SUCCESSFUL_RESPONSE_CONTENT);
       stubExecute(getSuccessfulResponse());
@@ -78,6 +78,9 @@ class HttpServiceImplTest {
       ParsedHttpResponse result = httpService.post(new URI(TEST_URI), Map.of("key", "value"));
 
       assertEquals(SUCCESSFUL_RESPONSE_CONTENT, result.content());
+      assertEquals(SUCCESSFUL_RESPONSE_CONTENT, result.content());
+      assertEquals(new URI(TEST_URI), result.originalUri());
+      assertEquals(new URI(TEST_URI + "?key=value"), result.redirectionUri());
       entityUtils.verify(() -> EntityUtils.toString(any()));
     }
   }

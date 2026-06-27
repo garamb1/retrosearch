@@ -77,7 +77,7 @@ public class HttpServiceImpl implements HttpService {
     String content = getResponseContent(get);
     return ParsedHttpResponse.builder()
         .originalUri(uri)
-        .redirectionUri(newUri)
+        .redirectionUri(newUri.equals(uri) ? null : newUri)
         .content(content)
         .build();
   }
