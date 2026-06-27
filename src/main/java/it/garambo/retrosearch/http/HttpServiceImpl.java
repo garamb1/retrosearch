@@ -129,6 +129,7 @@ public class HttpServiceImpl implements HttpService {
           try {
             return EntityUtils.toString(entity);
           } catch (ParseException e) {
+            EntityUtils.consume(entity);
             throw new IOException("Failed to parse response entity", e);
           }
         });

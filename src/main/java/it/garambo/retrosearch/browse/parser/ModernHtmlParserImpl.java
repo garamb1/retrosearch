@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dankito.readability4j.Article;
 import net.dankito.readability4j.Readability4J;
@@ -16,15 +17,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class ModernHtmlParserImpl implements ModernHtmlParser {
 
-  @Autowired private HttpService httpService;
-  @Autowired private ApplicationSettings settings;
+  private final HttpService httpService;
+  private final ApplicationSettings settings;
 
   private static final Map<String, String> tagReplacements = Map.of("span", "var");
 
@@ -44,13 +45,11 @@ public class ModernHtmlParserImpl implements ModernHtmlParser {
         .build();
   }
 
-  @Override
-  public Article parseArticle(URI uri, Document document) {
+  protected Article parseArticle(URI uri, Document document) {
     return new Readability4J(uri.toASCIIString(), document).parse();
   }
 
-  @Override
-  public String cleanPage(String articleContent, boolean replacePageLinks) {
+  private String cleanPage(String articleContent, boolean replacePageLinks) {
 
     String safePage =
         Jsoup.clean(
