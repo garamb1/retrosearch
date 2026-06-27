@@ -64,6 +64,7 @@ public class RetroSearchController {
       ParsedHtmlPage parsedHtmlPage = htmlParser.parsePage(uri);
       model.addAttribute("parsedHtmlPage", parsedHtmlPage);
       model.addAttribute("originalUrl", uri.toASCIIString());
+      model.addAttribute("redirectUrl", parsedHtmlPage.redirectTo());
       return "browse";
     } catch (Exception e) {
       log.error("Could not parse page at {}", uri, e);

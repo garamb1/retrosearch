@@ -2,9 +2,11 @@ package it.garambo.retrosearch.sports.football.client;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import it.garambo.retrosearch.http.HttpService;
+import it.garambo.retrosearch.http.ParsedHttpResponse;
 import it.garambo.retrosearch.sports.football.model.FootballDataResponse;
 import java.io.IOException;
 import java.net.URI;
@@ -27,7 +29,10 @@ class FootballDataOrgClientTest {
   void testFetchFootballData() throws IOException, URISyntaxException {
     URI uri = new URI("https://api.football-data.org/v4/matches");
     when(httpService.get(eq(uri), eq(Map.of()), any()))
-        .thenReturn("{" + "\"resultSet\":" + "{\"kind\" : \"no-dates\"}" + "}");
+        .thenReturn(
+            ParsedHttpResponse.builder()
+                .content("{" + "\"resultSet\":" + "{\"kind\" : \"no-dates\"}" + "}")
+                .build());
 
     FootballDataResponse noDatesResponse = client.fetchFootballData(null, null);
     assertNotNull(noDatesResponse);
@@ -43,8 +48,10 @@ class FootballDataOrgClientTest {
     Map<String, String> testDatesMap = Map.of("dateFrom", "2024-01-01", "dateTo", "2024-01-02");
 
     when(httpService.get(eq(uri), eq(testDatesMap), any()))
-        .thenReturn("{" + "\"resultSet\":" + "{\"kind\" : \"with-dates\"}" + "}");
-
+        .thenReturn(
+            ParsedHttpResponse.builder()
+                .content("{" + "\"resultSet\":" + "{\"kind\" : \"with-dates\"}" + "}")
+                .build());
     LocalDate from = LocalDate.of(2024, 1, 1);
     LocalDate to = LocalDate.of(2024, 1, 2);
 
@@ -53,5 +60,17 @@ class FootballDataOrgClientTest {
     assertNotNull(noDatesResponse.resultSet());
     assertTrue(noDatesResponse.resultSet().containsKey("kind"));
     assertEquals("with-dates", noDatesResponse.resultSet().get("kind"));
+  }
+
+  @Test
+  void testFetchFootballDataFailed() throws IOException, URISyntaxException {
+    URI uri = new URI("https://api.football-data.org/v4/matches");
+    Map<String, String> testDatesMap = Map.of("dateFrom", "2024-01-01", "dateTo", "2024-01-02");
+
+    doThrow(IOException.class).when(httpService).get(eq(uri), eq(testDatesMap), any());
+
+    LocalDate from = LocalDate.of(2024, 1, 1);
+    LocalDate to = LocalDate.of(2024, 1, 2);
+    assertThrows(IOException.class, () -> client.fetchFootballData(from, to));
   }
 }
