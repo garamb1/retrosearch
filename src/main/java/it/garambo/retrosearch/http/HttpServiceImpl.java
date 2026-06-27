@@ -23,10 +23,8 @@ import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-@Service
 public class HttpServiceImpl implements HttpService {
 
   private final CloseableHttpClient closeableHttpClient;

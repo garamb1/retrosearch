@@ -17,10 +17,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
 @AllArgsConstructor
 public class ModernHtmlParserImpl implements ModernHtmlParser {
 

@@ -13,17 +13,24 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class FootballDataOrgClientTest {
-  @Mock private HttpService httpService;
+  @Mock HttpService httpService;
 
-  @InjectMocks FootballDataOrgClient client;
+  FootballDataOrgClient client;
+
+  @BeforeEach
+  void setup() {
+    client =
+        new FootballDataOrgClient(
+            "https://api.football-data.org/v4/matches", "testKey", httpService);
+  }
 
   @Test
   void testFetchFootballData() throws IOException, URISyntaxException {

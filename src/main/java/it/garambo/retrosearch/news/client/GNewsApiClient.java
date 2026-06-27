@@ -8,25 +8,18 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
 
-@Component
-@ConditionalOnProperty(value = "retrosearch.news.enable", havingValue = "true")
+@AllArgsConstructor
 public class GNewsApiClient {
 
-  private final String API_URL = "https://gnews.io/api/v4/top-headlines";
-
-  @Value("${retrosearch.news.api.key:}")
-  private String apiKey;
-
-  @Autowired HttpService httpService;
+  private final String apiUrl;
+  private final String apiKey;
+  private final HttpService httpService;
 
   public GNewsApiResponse fetchNews(String language, String country)
       throws URISyntaxException, IOException {
-    URI apiUri = new URI(API_URL);
+    URI apiUri = new URI(apiUrl);
     Map<String, String> params =
         Map.of(
             "category", "general",

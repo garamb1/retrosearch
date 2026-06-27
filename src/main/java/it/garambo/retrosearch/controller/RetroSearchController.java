@@ -6,9 +6,9 @@ import it.garambo.retrosearch.ddg.client.DDGClient;
 import it.garambo.retrosearch.ddg.model.SearchResults;
 import java.net.URI;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
+@AllArgsConstructor
 public class RetroSearchController {
 
-  @Autowired private DDGClient ddgClient;
-  @Autowired private UrlValidator urlValidator;
-  @Autowired private ModernHtmlParser htmlParser;
+  private final DDGClient ddgClient;
+  private final UrlValidator urlValidator;
+  private final ModernHtmlParser htmlParser;
 
   @GetMapping("/")
   public String home() {

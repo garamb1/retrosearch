@@ -3,7 +3,16 @@ package it.garambo.retrosearch.configuration;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BandwidthBuilder;
 import io.github.bucket4j.Bucket;
+import it.garambo.retrosearch.browse.parser.ModernHtmlParser;
+import it.garambo.retrosearch.browse.parser.ModernHtmlParserImpl;
 import it.garambo.retrosearch.controller.RateLimitingFilter;
+import it.garambo.retrosearch.ddg.client.DDGClient;
+import it.garambo.retrosearch.ddg.client.DDGClientImpl;
+import it.garambo.retrosearch.ddg.scraper.DDGScraper;
+import it.garambo.retrosearch.http.HttpService;
+import it.garambo.retrosearch.http.HttpServiceImpl;
+import it.garambo.retrosearch.news.client.GNewsApiClient;
+import it.garambo.retrosearch.sports.football.client.FootballDataOrgClient;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -17,6 +26,7 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -54,8 +64,7 @@ public class BeanConfig {
     return new FilterRegistrationBean<>(new RateLimitingFilter(rateLimitingBucket, excludedPaths));
   }
 
-  @Bean
-  public CloseableHttpClient closeableHttpClient() {
+  private CloseableHttpClient createCloseableHttpClient() {
     PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
     RequestConfig requestConfig =
@@ -73,6 +82,59 @@ public class BeanConfig {
         .disableAutomaticRetries()
         .evictIdleConnections(TimeValue.ofSeconds(2))
         .build();
+  }
+
+  @Bean("generalHttpService")
+  public HttpService generalHttpService() {
+    return new HttpServiceImpl(createCloseableHttpClient());
+  }
+
+  @Bean("modernHtmlParser")
+  public ModernHtmlParser ModernHtmlParser(
+      @Qualifier("generalHttpService") HttpService generalHttpService,
+      ApplicationSettings applicationSettings) {
+    return new ModernHtmlParserImpl(generalHttpService, applicationSettings);
+  }
+
+  @Bean("searchHttpService")
+  public HttpService searchHttpService() {
+    return new HttpServiceImpl(createCloseableHttpClient());
+  }
+
+  @Bean
+  public DDGClient ddgClient(
+      @Qualifier("searchHttpService") HttpService searchHttpService, DDGScraper ddgScraper) {
+    return new DDGClientImpl(searchHttpService, ddgScraper);
+  }
+
+  @Bean("newsHttpService")
+  public HttpService newsHttpService() {
+    return new HttpServiceImpl(createCloseableHttpClient());
+  }
+
+  @Bean
+  @ConditionalOnProperty(value = "retrosearch.news.enable", havingValue = "true")
+  public GNewsApiClient gNewsApiClient(
+      @Value("${retrosearch.news.api.url:https://gnews.io/api/v4/top-headlines}") String apiUrl,
+      @Value("${retrosearch.news.api.key:}") String apiKey,
+      @Qualifier("newsHttpService") HttpService newsHttpService) {
+    return new GNewsApiClient(apiUrl, apiKey, newsHttpService);
+  }
+
+  @Bean("footballHttpService")
+  public HttpService footballHttpService() {
+    CloseableHttpClient closeableHttpClient = createCloseableHttpClient();
+    return new HttpServiceImpl(closeableHttpClient);
+  }
+
+  @Bean
+  @ConditionalOnProperty(value = "retrosearch.sports.football.enable", havingValue = "true")
+  public FootballDataOrgClient footballDataOrgClient(
+      @Qualifier("footballHttpService") HttpService footballHttpService,
+      @Value("${retrosearch.sports.football.api.key:}") String apiKey,
+      @Value("${retrosearch.sports.football.api.url:https://api.football-data.org/v4/matches}")
+          String apiUrl) {
+    return new FootballDataOrgClient(apiUrl, apiKey, footballHttpService);
   }
 
   @Bean

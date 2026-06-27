@@ -11,15 +11,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
 
-@Component
+@AllArgsConstructor
 public class DDGClientImpl implements DDGClient {
 
-  @Autowired private HttpService httpService;
-
-  @Autowired private DDGScraper ddgScraper;
+  private final HttpService httpService;
+  private final DDGScraper ddgScraper;
 
   @Override
   public SearchResults search(String query) throws IOException, URISyntaxException {
