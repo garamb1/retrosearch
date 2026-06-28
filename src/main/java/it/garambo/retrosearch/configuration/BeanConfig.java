@@ -64,14 +64,15 @@ public class BeanConfig {
     return new FilterRegistrationBean<>(new RateLimitingFilter(rateLimitingBucket, excludedPaths));
   }
 
-  private CloseableHttpClient createCloseableHttpClient() {
+  private CloseableHttpClient createCloseableHttpClient(
+      int requestConnectionTimeout, int responseTimeout) {
     PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
     RequestConfig requestConfig =
         RequestConfig.custom()
             .setRedirectsEnabled(true)
-            .setResponseTimeout(Timeout.ofMilliseconds(10000))
-            .setConnectionRequestTimeout(Timeout.ofMilliseconds(5000))
+            .setConnectionRequestTimeout(Timeout.ofMilliseconds(requestConnectionTimeout))
+            .setResponseTimeout(Timeout.ofMilliseconds(responseTimeout))
             .build();
 
     return HttpClients.custom()
@@ -84,9 +85,18 @@ public class BeanConfig {
         .build();
   }
 
+  private CloseableHttpClient createCloseableHttpClient() {
+    final int defaultTimeout = 5000;
+    return createCloseableHttpClient(defaultTimeout, defaultTimeout);
+  }
+
   @Bean("generalHttpService")
-  public HttpService generalHttpService() {
-    return new HttpServiceImpl(createCloseableHttpClient());
+  public HttpService generalHttpService(
+      @Value("${retrosearch.httpclient.timeout.request.connection:10000}")
+          int requestConnectionTimeout,
+      @Value("${retrosearch.httpclient.timeout.response:10000}") int responseTimeout) {
+    return new HttpServiceImpl(
+        createCloseableHttpClient(requestConnectionTimeout, responseTimeout));
   }
 
   @Bean("modernHtmlParser")

@@ -9,6 +9,7 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.hc.core5.http.ConnectionRequestTimeoutException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,6 +68,12 @@ public class RetroSearchController {
       model.addAttribute("originalUrl", uri.toASCIIString());
       model.addAttribute("redirectUrl", parsedHtmlPage.redirectTo());
       return "browse";
+    } catch (ConnectionRequestTimeoutException timeoutException) {
+      log.error("Could not parse page at {}", uri, timeoutException);
+      model.addAttribute(
+          "error", "Could not get a response from address in time - maybe try again?");
+      model.addAttribute("details", "Timeout getting a response from address: " + uri);
+      return "error-details";
     } catch (Exception e) {
       log.error("Could not parse page at {}", uri, e);
       model.addAttribute("error", "Could not parse this page. Sorry :(");
